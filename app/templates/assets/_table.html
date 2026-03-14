@@ -1,0 +1,30 @@
+{% if assets %}
+<table>
+    <thead>
+        <tr>
+            <th>Asset Tag</th>
+            <th>Type</th>
+            <th>Make / Model</th>
+            <th>Assigned To</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for asset in assets %}
+        <tr>
+            <td><a href="/assets/{{ asset.id }}">{{ asset.asset_tag }}</a></td>
+            <td>{{ asset.asset_type.value | replace("_", " ") | title }}</td>
+            <td>{{ asset.make or "" }} {{ asset.model or "" }}</td>
+            <td>{{ asset.assigned_user or "—" }}</td>
+            <td>{{ asset.location.name if asset.location else "—" }}</td>
+            <td><span class="badge badge-{{ asset.status.value }}">{{ asset.status.value | replace("_", " ") }}</span></td>
+            <td><a href="/assets/{{ asset.id }}/edit">Edit</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No assets found.</p>
+{% endif %}

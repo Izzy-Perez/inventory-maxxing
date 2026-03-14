@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Inventory Maxxing{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+
+<div class="stats">
+    <div class="stat-card">
+        <h2>{{ total }}</h2>
+        <small>Total Assets</small>
+    </div>
+    <div class="stat-card">
+        <h2>{{ active }}</h2>
+        <small>Active</small>
+    </div>
+    <div class="stat-card">
+        <h2>{{ disposed }}</h2>
+        <small>Disposed</small>
+    </div>
+</div>
+
+{% if by_type %}
+<h3>Assets by Type</h3>
+<table>
+    <thead>
+        <tr><th>Type</th><th>Count</th></tr>
+    </thead>
+    <tbody>
+        {% for type_name, count in by_type %}
+        <tr>
+            <td>{{ type_name.value | replace("_", " ") | title }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock %}

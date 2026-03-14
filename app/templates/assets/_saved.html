@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="toast">Asset {{ asset.asset_tag }} saved.</div>
+<meta http-equiv="refresh" content="1;url=/assets/{{ asset.id }}">
+<p>Saved. Redirecting...</p>
+{% endblock %}

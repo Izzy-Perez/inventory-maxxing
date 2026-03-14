@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Assets - Inventory Maxxing{% endblock %}
+{% block content %}
+<h1>Assets</h1>
+
+<form class="filters" hx-get="/assets" hx-target="#asset-table" hx-push-url="true">
+    <input type="search" name="q" placeholder="Search tag, serial, user, make..."
+           value="{{ q }}" hx-get="/assets" hx-trigger="keyup changed delay:300ms"
+           hx-target="#asset-table">
+    <select name="status" hx-get="/assets" hx-target="#asset-table" hx-include="[name='q'],[name='location_id']">
+        <option value="">All Statuses</option>
+        {% for s in statuses %}
+        <option value="{{ s.value }}" {% if current_status == s.value %}selected{% endif %}>
+            {{ s.value | replace("_", " ") | title }}
+        </option>
+        {% endfor %}
+    </select>
+    <select name="location_id" hx-get="/assets" hx-target="#asset-table" hx-include="[name='q'],[name='status']">
+        <option value="">All Locations</option>
+        {% for loc in locations %}
+        <option value="{{ loc.id }}" {% if current_location_id == loc.id %}selected{% endif %}>
+            {{ loc.name }}
+        </option>
+        {% endfor %}
+    </select>
+</form>
+
+<div id="asset-table">
+    {% include "assets/_table.html" %}
+</div>
+{% endblock %}

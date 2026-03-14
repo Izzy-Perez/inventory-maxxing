@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}{{ "Edit " + asset.asset_tag if asset else "New Asset" }} - Inventory Maxxing{% endblock %}
+{% block content %}
+<h1>{{ "Edit " + asset.asset_tag if asset else "New Asset" }}</h1>
+
+<form method="post"
+      action="{{ '/assets/' ~ asset.id ~ '/edit' if asset else '/assets/new' }}"
+      hx-post="{{ '/assets/' ~ asset.id ~ '/edit' if asset else '/assets/new' }}"
+      hx-target="body">
+
+    <div class="grid">
+        <label>
+            Asset Tag *
+            <input type="text" name="asset_tag" value="{{ asset.asset_tag if asset else '' }}" required>
+        </label>
+        <label>
+            Type *
+            <select name="asset_type" required>
+                {% for t in asset_types %}
+                <option value="{{ t.value }}" {% if asset and asset.asset_type == t %}selected{% endif %}>
+                    {{ t.value | replace("_", " ") | title }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            Status
+            <select name="status">
+                {% for s in statuses %}
+                <option value="{{ s.value }}" {% if asset and asset.status == s %}selected{% endif %}>
+                    {{ s.value | replace("_", " ") | title }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+
+    <div class="grid">
+        <label>
+            Serial Number
+            <input type="text" name="serial_number" value="{{ asset.serial_number or '' if asset else '' }}">
+        </label>
+        <label>
+            Make
+            <input type="text" name="make" value="{{ asset.make or '' if asset else '' }}">
+        </label>
+        <label>
+            Model
+            <input type="text" name="model" value="{{ asset.model or '' if asset else '' }}">
+        </label>
+    </div>
+
+    <label>
+        Description
+        <textarea name="description">{{ asset.description or '' if asset else '' }}</textarea>
+    </label>
+
+    <h3>Assignment</h3>
+    <div class="grid">
+        <label>
+            Assigned User
+            <input type="text" name="assigned_user" value="{{ asset.assigned_user or '' if asset else '' }}">
+        </label>
+        <label>
+            Department
+            <input type="text" name="department" value="{{ asset.department or '' if asset else '' }}">
+        </label>
+        <label>
+            Location
+            <select name="location_id">
+                <option value="">— None —</option>
+                {% for loc in locations %}
+                <option value="{{ loc.id }}" {% if asset and asset.location_id == loc.id %}selected{% endif %}>
+                    {{ loc.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+
+    <h3>Financial</h3>
+    <div class="grid">
+        <label>
+            Purchase Date
+            <input type="date" name="purchase_date" value="{{ asset.purchase_date or '' if asset else '' }}">
+        </label>
+        <label>
+            Purchase Cost
+            <input type="number" step="0.01" name="purchase_cost"
+                   value="{{ asset.purchase_cost or '' if asset else '' }}">
+        </label>
+        <label>
+            PO Number
+            <input type="text" name="po_number" value="{{ asset.po_number or '' if asset else '' }}">
+        </label>
+    </div>
+    <div class="grid">
+        <label>
+            Vendor
+            <input type="text" name="vendor" value="{{ asset.vendor or '' if asset else '' }}">
+        </label>
+        <label>
+            Warranty Expiration
+            <input type="date" name="warranty_expiration"
+                   value="{{ asset.warranty_expiration or '' if asset else '' }}">
+        </label>
+    </div>
+
+    <h3>Disposal</h3>
+    <div class="grid">
+        <label>
+            Disposal Date
+            <input type="date" name="disposal_date" value="{{ asset.disposal_date or '' if asset else '' }}">
+        </label>
+        <label>
+            Disposal Method
+            <select name="disposal_method">
+                <option value="">— N/A —</option>
+                {% for dm in disposal_methods %}
+                <option value="{{ dm.value }}" {% if asset and asset.disposal_method == dm %}selected{% endif %}>
+                    {{ dm.value | title }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            Recovery Value
+            <input type="number" step="0.01" name="disposal_value"
+                   value="{{ asset.disposal_value or '' if asset else '' }}">
+        </label>
+    </div>
+    <label>
+        Disposal Notes
+        <textarea name="disposal_notes">{{ asset.disposal_notes or '' if asset else '' }}</textarea>
+    </label>
+
+    <button type="submit">{{ "Update" if asset else "Create" }} Asset</button>
+    <a href="/assets" role="button" class="outline">Cancel</a>
+</form>
+{% endblock %}

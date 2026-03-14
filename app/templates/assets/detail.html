@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ asset.asset_tag }} - Inventory Maxxing{% endblock %}
+{% block content %}
+<hgroup>
+    <h1>{{ asset.asset_tag }}</h1>
+    <p>{{ asset.make or "" }} {{ asset.model or "" }}
+        <span class="badge badge-{{ asset.status.value }}">{{ asset.status.value | replace("_", " ") }}</span>
+    </p>
+</hgroup>
+
+<div class="grid">
+    <div>
+        <h3>Device Info</h3>
+        <dl>
+            <dt>Type</dt><dd>{{ asset.asset_type.value | replace("_", " ") | title }}</dd>
+            <dt>Serial Number</dt><dd>{{ asset.serial_number or "—" }}</dd>
+            <dt>Description</dt><dd>{{ asset.description or "—" }}</dd>
+        </dl>
+    </div>
+    <div>
+        <h3>Assignment</h3>
+        <dl>
+            <dt>Assigned User</dt><dd>{{ asset.assigned_user or "—" }}</dd>
+            <dt>Department</dt><dd>{{ asset.department or "—" }}</dd>
+            <dt>Location</dt><dd>{{ asset.location.name if asset.location else "—" }}</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="grid">
+    <div>
+        <h3>Financial</h3>
+        <dl>
+            <dt>Purchase Date</dt><dd>{{ asset.purchase_date or "—" }}</dd>
+            <dt>Purchase Cost</dt><dd>{{ "$%.2f" | format(asset.purchase_cost) if asset.purchase_cost else "—" }}</dd>
+            <dt>PO Number</dt><dd>{{ asset.po_number or "—" }}</dd>
+            <dt>Vendor</dt><dd>{{ asset.vendor or "—" }}</dd>
+            <dt>Warranty Expires</dt><dd>{{ asset.warranty_expiration or "—" }}</dd>
+        </dl>
+    </div>
+    <div>
+        <h3>Disposal</h3>
+        <dl>
+            <dt>Disposal Date</dt><dd>{{ asset.disposal_date or "—" }}</dd>
+            <dt>Method</dt><dd>{{ asset.disposal_method.value | title if asset.disposal_method else "—" }}</dd>
+            <dt>Recovery Value</dt><dd>{{ "$%.2f" | format(asset.disposal_value) if asset.disposal_value else "—" }}</dd>
+            <dt>Notes</dt><dd>{{ asset.disposal_notes or "—" }}</dd>
+        </dl>
+    </div>
+</div>
+
+<a href="/assets/{{ asset.id }}/edit" role="button">Edit</a>
+<a href="/assets" role="button" class="outline">Back to List</a>
+<button class="secondary outline" hx-delete="/assets/{{ asset.id }}"
+        hx-confirm="Delete this asset?" hx-on::after-request="window.location='/assets'">
+    Delete
+</button>
+{% endblock %}

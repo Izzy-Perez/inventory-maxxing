@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Inventory Maxxing{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <style>
+        :root { --pico-font-size: 90%; }
+        nav { margin-bottom: 1rem; }
+        .stats { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+        .stat-card {
+            flex: 1; min-width: 150px; padding: 1rem;
+            border-radius: 8px; background: var(--pico-card-background-color);
+            border: 1px solid var(--pico-muted-border-color);
+            text-align: center;
+        }
+        .stat-card h2 { margin: 0; font-size: 2rem; }
+        .stat-card small { color: var(--pico-muted-color); }
+        .badge {
+            display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px;
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+        }
+        .badge-active { background: #2e7d32; color: #fff; }
+        .badge-spare { background: #1565c0; color: #fff; }
+        .badge-in_repair { background: #e65100; color: #fff; }
+        .badge-disposed { background: #616161; color: #fff; }
+        .badge-lost_stolen { background: #b71c1c; color: #fff; }
+        table { font-size: 0.85rem; }
+        .filters { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: end; margin-bottom: 1rem; }
+        .filters input, .filters select { margin-bottom: 0; }
+        .toast {
+            position: fixed; top: 1rem; right: 1rem; padding: 0.75rem 1.5rem;
+            background: #2e7d32; color: #fff; border-radius: 6px; z-index: 999;
+            animation: fadeout 3s forwards;
+        }
+        @keyframes fadeout { 0%,70% { opacity: 1; } 100% { opacity: 0; display: none; } }
+    </style>
+</head>
+<body>
+    <nav class="container">
+        <ul>
+            <li><strong><a href="/">Inventory Maxxing</a></strong></li>
+        </ul>
+        <ul>
+            <li><a href="/">Dashboard</a></li>
+            <li><a href="/assets">Assets</a></li>
+            <li><a href="/assets/new">+ New Asset</a></li>
+        </ul>
+    </nav>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
