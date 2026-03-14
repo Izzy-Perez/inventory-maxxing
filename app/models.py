@@ -35,15 +35,29 @@ class DisposalMethod(str, enum.Enum):
     RETURNED = "returned"
 
 
-class Location(Base):
-    __tablename__ = "locations"
+class Office(str, enum.Enum):
+    CHICAGO = "Chicago"
+    MORGAN_HILL = "Morgan_Hill"
+    HARTFORD = "Hartford"
+    RALEIGH_DURHAM = "Raleigh-Durham"
+    IRVINE = "Irvine"
+    HILLSBORO = "Hillsboro"
+    ALLIANCE = "Alliance"
+    CLINTON = "Clinton"
+    TRUMBULL = "Trumbull"
+
+
+class DeviceCatalog(Base):
+    __tablename__ = "device_catalog"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(200), unique=True)
-    address: Mapped[str | None] = mapped_column(Text)
-    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    make: Mapped[str] = mapped_column(String(50))
+    model: Mapped[str] = mapped_column(String(100))
+    asset_type: Mapped[AssetType] = mapped_column(Enum(AssetType))
+    current_price: Mapped[float | None] = mapped_column(Numeric(10, 2))
+    price_updated_at: Mapped[datetime | None] = mapped_column(DateTime)
 
-    assets: Mapped[list["Asset"]] = relationship(back_populates="location")
+    assets: Mapped[list["Asset"]] = relationship(back_populates="device")
 
 
 class Asset(Base):
@@ -52,9 +66,7 @@ class Asset(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     asset_tag: Mapped[str] = mapped_column(String(50), unique=True, index=True)
     serial_number: Mapped[str | None] = mapped_column(String(100), index=True)
-    asset_type: Mapped[AssetType] = mapped_column(Enum(AssetType))
-    make: Mapped[str | None] = mapped_column(String(100))
-    model: Mapped[str | None] = mapped_column(String(200))
+    device_id: Mapped[int | None] = mapped_column(ForeignKey("device_catalog.id"))
     description: Mapped[str | None] = mapped_column(Text)
 
     # Financial
@@ -66,7 +78,7 @@ class Asset(Base):
     # Assignment
     assigned_user: Mapped[str | None] = mapped_column(String(200))
     department: Mapped[str | None] = mapped_column(String(100))
-    location_id: Mapped[int | None] = mapped_column(ForeignKey("locations.id"))
+    office: Mapped[Office | None] = mapped_column(Enum(Office))
 
     # Status
     status: Mapped[AssetStatus] = mapped_column(Enum(AssetStatus), default=AssetStatus.ACTIVE)
@@ -82,4 +94,4 @@ class Asset(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now())
 
-    location: Mapped[Location | None] = relationship(back_populates="assets")
+    device: Mapped[DeviceCatalog | None] = relationship(back_populates="assets")
