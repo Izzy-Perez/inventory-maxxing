@@ -10,6 +10,8 @@ class Base(DeclarativeBase):
 
 
 class AssetStatus(str, enum.Enum):
+    ORDERED = "ordered"
+    AVAILABLE = "available"
     ACTIVE = "active"
     SPARE = "spare"
     IN_REPAIR = "in_repair"
